@@ -5,8 +5,10 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { getJobById, updateJobStatus, deleteJob } from "../../../lib/api";
 
+// Available status options
 const STATUSES = ["Open", "In Progress", "Closed"];
 
+// Return appropriate badge styling based on status
 function getBadgeClass(status) {
   if (status === "Open") return "badge badge-open";
   if (status === "In Progress") return "badge badge-inprogress";
@@ -14,10 +16,12 @@ function getBadgeClass(status) {
 }
 
 export default function JobDetailPage() {
+  // Get router and URL parameters
   const router = useRouter();
   const params = useParams();
   const { id } = params;
 
+  // State management
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,6 +30,7 @@ export default function JobDetailPage() {
   const [deleting, setDeleting] = useState(false);
   const [updateMsg, setUpdateMsg] = useState("");
 
+  // Load job details when component mounts
   useEffect(() => {
     async function loadJob() {
       try {
@@ -41,6 +46,7 @@ export default function JobDetailPage() {
     loadJob();
   }, [id]);
 
+  // Handle status update
   async function handleStatusChange() {
     if (selectedStatus === job.status) {
       setUpdateMsg("Status is already set to that value.");

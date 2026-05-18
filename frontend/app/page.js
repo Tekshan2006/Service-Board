@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getAllJobs } from "../lib/api";
 
+// Available service categories
 const CATEGORIES = ["All", "Plumbing", "Electrical", "Painting", "Joinery", "Other"];
+// Available job statuses
 const STATUSES = ["All", "Open", "In Progress", "Closed"];
 
+// Return appropriate badge styling based on status
 function getBadgeClass(status) {
   if (status === "Open") return "badge badge-open";
   if (status === "In Progress") return "badge badge-inprogress";
@@ -14,6 +17,7 @@ function getBadgeClass(status) {
 }
 
 export default function HomePage() {
+  // State management
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,10 +25,12 @@ export default function HomePage() {
   const [status, setStatus] = useState("All");
   const [search, setSearch] = useState("");
 
+  // Fetch jobs when category or status changes
   useEffect(() => {
     fetchJobs();
   }, [category, status]);
 
+  // Fetch jobs from backend API with applied filters
   async function fetchJobs() {
     setLoading(true);
     setError("");
@@ -43,6 +49,7 @@ export default function HomePage() {
     }
   }
 
+  // Trigger search when user presses Enter key
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
       fetchJobs();

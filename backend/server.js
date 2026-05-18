@@ -8,7 +8,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-// middleware
+// Configure CORS to allow requests from frontend (localhost:3000, 3001, or custom URL)
 app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
@@ -27,20 +27,22 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// Parse incoming JSON requests
 app.use(express.json());
 
-// routes
+// Register job routes
 app.use("/api/jobs", jobRoutes);
 
-// 404 for unknown routes
+// Handle 404 errors for unknown routes
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// global error handler
+// Apply global error handler
 app.use(errorHandler);
 
-// connect to mongodb then start server
+// Connect to MongoDB and start the server
 const PORT = process.env.PORT || 5000;
 
 mongoose

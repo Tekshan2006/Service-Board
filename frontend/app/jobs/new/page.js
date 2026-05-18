@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createJob } from "../../../lib/api";
 
+// Available service categories
 const CATEGORIES = ["Plumbing", "Electrical", "Painting", "Joinery", "Other"];
 
 export default function NewJobPage() {
+  // Get router for navigation after form submission
   const router = useRouter();
 
+  // Form data state
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -19,19 +22,22 @@ export default function NewJobPage() {
     contactEmail: "",
   });
 
+  // Form validation and submission states
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Update form data and clear field errors on change
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // clear field error when user starts typing
+    // Clear field error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   }
 
+  // Validate form fields
   function validate() {
     const newErrors = {};
 
@@ -43,6 +49,7 @@ export default function NewJobPage() {
       newErrors.description = "Description is required";
     }
 
+    // Email validation only if email is provided
     if (formData.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
       newErrors.contactEmail = "Please enter a valid email address";
     }

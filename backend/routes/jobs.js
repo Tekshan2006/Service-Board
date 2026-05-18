@@ -2,20 +2,22 @@ const express = require("express");
 const router = express.Router();
 const JobRequest = require("../models/JobRequest");
 
-// GET /api/jobs - get all jobs with optional filters
+// Fetch all jobs with optional filters (category, status, search keyword)
 router.get("/", async (req, res, next) => {
   try {
     const filter = {};
 
+    // Filter by category if provided
     if (req.query.category) {
       filter.category = req.query.category;
     }
 
+    // Filter by status if provided
     if (req.query.status) {
       filter.status = req.query.status;
     }
 
-    // bonus: keyword search across title and description
+    // Search by keyword in title or description (case-insensitive)
     if (req.query.search) {
       filter.$or = [
         { title: { $regex: req.query.search, $options: "i" } },
@@ -23,6 +25,7 @@ router.get("/", async (req, res, next) => {
       ];
     }
 
+    // Get jobs sorted by newest first
     const jobs = await JobRequest.find(filter).sort({ createdAt: -1 });
     res.json(jobs);
   } catch (err) {
@@ -30,7 +33,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// GET /api/jobs/:id - get a single job
+// Fetch a single job by ID
 router.get("/:id", async (req, res, next) => {
   try {
     const job = await JobRequest.findById(req.params.id);
@@ -45,16 +48,17 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST /api/jobs - create a new job
+// Create a new job request
 router.post("/", async (req, res, next) => {
   try {
     const { title, description, category, location, contactName, contactEmail } = req.body;
 
-    // manual check for required fields
+    // Validate required fields
     if (!title || !description) {
       return res.status(400).json({ message: "Title and description are required" });
     }
 
+    // Create new job document
     const newJob = new JobRequest({
       title,
       description,
@@ -64,6 +68,7 @@ router.post("/", async (req, res, next) => {
       contactEmail,
     });
 
+    // Save to MongoDB
     const savedJob = await newJob.save();
     res.status(201).json(savedJob);
   } catch (err) {
@@ -71,16 +76,18 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// PATCH /api/jobs/:id - update status only
+// Update job status (Open, In Progress, or Closed)
 router.patch("/:id", async (req, res, next) => {
   try {
     const { status } = req.body;
 
+    // Validate status value
     const allowedStatuses = ["Open", "In Progress", "Closed"];
     if (!status || !allowedStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status value" });
     }
 
+    // Update and return the updated job
     const job = await JobRequest.findByIdAndUpdate(
       req.params.id,
       { status },
@@ -97,7 +104,7 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-// DELETE /api/jobs/:id - delete a job
+// Delete a job request
 router.delete("/:id", async (req, res, next) => {
   try {
     const job = await JobRequest.findByIdAndDelete(req.params.id);

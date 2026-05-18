@@ -1,19 +1,20 @@
-// global error handler - catches anything passed to next(err)
+// Global error handler - catches all errors passed to next(err)
+// Handles different error types and sends appropriate responses
 const errorHandler = (err, req, res, next) => {
   console.error(err.stack);
 
-  // mongoose validation error
+  // Handle MongoDB validation errors
   if (err.name === "ValidationError") {
     const messages = Object.values(err.errors).map((e) => e.message);
     return res.status(400).json({ message: messages.join(", ") });
   }
 
-  // mongoose bad ObjectId
+  // Handle invalid MongoDB ObjectId format
   if (err.name === "CastError") {
     return res.status(400).json({ message: "Invalid ID format" });
   }
 
-  // default server error
+  // Default server error response
   res.status(500).json({ message: "Something went wrong on the server" });
 };
 
