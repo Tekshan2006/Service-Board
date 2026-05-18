@@ -238,9 +238,9 @@ Service-Board/
 This project is licensed under the **MIT License** - see the LICENSE file for details.
 
 You are free to:
-- ✅ Use this project for personal or commercial purposes
-- ✅ Modify and distribute the code
-- ✅ Include it in other projects
+- Use this project for personal or commercial purposes
+- Modify and distribute the code
+- Include it in other projects
 
 The only requirement is to include the original license notice.
 
