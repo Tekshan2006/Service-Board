@@ -42,6 +42,7 @@ This installs dependencies for:
 MONGO_URI=mongodb+srv://username:password@cluster.xxxxx.mongodb.net/?appName=service-board
 PORT=5050
 FRONTEND_URL=http://localhost:3000
+JWT_SECRET=your-secret-key
 ```
 
 **Frontend - create `frontend/.env.local`:**
@@ -104,6 +105,61 @@ npm run seed
 | `npm run start:backend` | Start backend production server |
 | `npm run start` | Start both in production mode |
 | `npm run seed` | Seed database with sample data |
+| `npm test` | Run unit tests for API endpoints (backend only) |
+
+---
+
+## Authentication & Security
+
+### JWT Authentication
+The application uses **JWT (JSON Web Token)** for secure authentication:
+
+- **Protected Routes**: POST, PATCH, and DELETE endpoints require authentication
+- **Login Endpoint**: `POST /api/auth/login` - Get a JWT token
+- **Token Usage**: Include token in Authorization header: `Authorization: Bearer <token>`
+
+### How to Use JWT:
+1. Login to get a token:
+```bash
+curl -X POST http://localhost:5050/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}'
+```
+
+2. Use the token to create/update/delete jobs:
+```bash
+curl -X POST http://localhost:5050/api/jobs \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{"title": "New Job", "description": "Job details", "category": "Plumbing"}'
+```
+
+---
+
+## Testing
+
+### Unit Tests
+The backend includes comprehensive unit tests using **Jest** and **Supertest**:
+
+**Run tests:**
+```bash
+cd backend && npm test
+```
+
+**Test Coverage:**
+- GET all jobs
+- GET single job by ID
+- POST create job (with JWT protection)
+- PATCH update job status (with JWT protection)
+- DELETE job (with JWT protection)
+- POST login endpoint
+- Error handling and validation
+
+**Sample Test Results:**
+```
+Test Suites: 1 passed
+Tests:       15 passed
+```
 
 ---
 
@@ -111,9 +167,10 @@ npm run seed
 
 - `GET /api/jobs` - Get all jobs
 - `GET /api/jobs/:id` - Get single job
-- `POST /api/jobs` - Create job
-- `PATCH /api/jobs/:id` - Update job status
-- `DELETE /api/jobs/:id` - Delete job
+- `POST /api/jobs` - Create job (requires JWT)
+- `PATCH /api/jobs/:id` - Update job status (requires JWT)
+- `DELETE /api/jobs/:id` - Delete job (requires JWT)
+- `POST /api/auth/login` - Login and get JWT token
 
 ---
 

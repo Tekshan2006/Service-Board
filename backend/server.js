@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const jobRoutes = require("./routes/jobs");
+const authRoutes = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -30,6 +31,9 @@ app.use(cors({
 
 // Parse incoming JSON requests
 app.use(express.json());
+
+// Register authentication routes
+app.use("/api/auth", authRoutes);
 
 // Register job routes
 app.use("/api/jobs", jobRoutes);

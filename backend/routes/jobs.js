@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const JobRequest = require("../models/JobRequest");
+const { verifyToken } = require("../middleware/authMiddleware");
 
 // Fetch all jobs with optional filters (category, status, search keyword)
 router.get("/", async (req, res, next) => {
@@ -48,8 +49,8 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// Create a new job request
-router.post("/", async (req, res, next) => {
+// Create a new job request (requires authentication)
+router.post("/", verifyToken, async (req, res, next) => {
   try {
     const { title, description, category, location, contactName, contactEmail } = req.body;
 
@@ -58,7 +59,7 @@ router.post("/", async (req, res, next) => {
       return res.status(400).json({ message: "Title and description are required" });
     }
 
-    // Create new job document
+    // Create new job document with user info
     const newJob = new JobRequest({
       title,
       description,
@@ -66,6 +67,7 @@ router.post("/", async (req, res, next) => {
       location,
       contactName,
       contactEmail,
+      createdBy: req.user.email, // Store who created the job
     });
 
     // Save to MongoDB
@@ -76,8 +78,8 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Update job status (Open, In Progress, or Closed)
-router.patch("/:id", async (req, res, next) => {
+// Update job status (Open, In Progress, or Closed) - requires authentication
+router.patch("/:id", verifyToken, async (req, res, next) => {
   try {
     const { status } = req.body;
 
@@ -104,8 +106,8 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-// Delete a job request
-router.delete("/:id", async (req, res, next) => {
+// Delete a job request (requires authentication)
+router.delete("/:id", verifyToken, async (req, res, next) => {
   try {
     const job = await JobRequest.findByIdAndDelete(req.params.id);
 
