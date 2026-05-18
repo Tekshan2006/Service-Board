@@ -1,6 +1,14 @@
 # Service Request Board
 
-A full-stack web app for posting and browsing home service requests.
+A full-stack web application for posting and browsing home service requests. Users can create, view, search, and manage service job listings with real-time status updates. Built with modern web technologies including Next.js for the frontend, Node.js/Express for the backend, and MongoDB Atlas for cloud database management.
+
+### Key Features:
+- **Job Listings**: Browse all available service requests
+- **Advanced Search**: Search by keywords across job titles and descriptions
+- **Smart Filtering**: Filter jobs by category (Plumbing, Electrical, Painting, Joinery, Other) and status (Open, In Progress, Closed)
+- **Job Management**: Create new service requests, update statuses, and delete completed jobs
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Real-time Updates**: Instant synchronization between frontend and backend
 
 ---
 
@@ -99,18 +107,6 @@ npm run seed
 
 ---
 
-## Features
-
-- View all job requests
-- Search by keyword
-- Filter by category and status
-- Create new job
-- Update job status
-- Delete job
-- View job details
-
----
-
 ## API Endpoints
 
 - `GET /api/jobs` - Get all jobs
@@ -121,7 +117,135 @@ npm run seed
 
 ---
 
-## Access
+## API Testing with cURL
+
+Test the API endpoints using cURL commands:
+
+### Get all jobs
+```bash
+curl http://localhost:5050/api/jobs
+```
+
+### Get all jobs with filters
+```bash
+# Filter by category
+curl "http://localhost:5050/api/jobs?category=Plumbing"
+
+# Filter by status
+curl "http://localhost:5050/api/jobs?status=Open"
+
+# Search by keyword
+curl "http://localhost:5050/api/jobs?search=leak"
+
+# Combine filters
+curl "http://localhost:5050/api/jobs?category=Electrical&status=In%20Progress"
+```
+
+### Get a single job by ID
+```bash
+curl http://localhost:5050/api/jobs/YOUR_JOB_ID
+```
+
+### Create a new job
+```bash
+curl -X POST http://localhost:5050/api/jobs \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Leaky tap repair needed",
+    "description": "Kitchen tap is dripping constantly",
+    "category": "Plumbing",
+    "location": "123 Main St",
+    "contactName": "John Doe",
+    "contactEmail": "john@example.com"
+  }'
+```
+
+### Update job status
+```bash
+curl -X PATCH http://localhost:5050/api/jobs/YOUR_JOB_ID \
+  -H "Content-Type: application/json" \
+  -d '{"status": "In Progress"}'
+```
+
+### Delete a job
+```bash
+curl -X DELETE http://localhost:5050/api/jobs/YOUR_JOB_ID
+```
+
+---
+
+## Project Structure
+
+```
+Service-Board/
+├── backend/
+│   ├── models/
+│   │   └── JobRequest.js          # MongoDB schema for jobs
+│   ├── routes/
+│   │   └── jobs.js                # API endpoint handlers
+│   ├── middleware/
+│   │   └── errorHandler.js        # Global error handler
+│   ├── .env                       # Backend environment variables
+│   ├── .env.example               # Example environment file
+│   ├── server.js                  # Express server setup
+│   ├── seed.js                    # Database seeding script
+│   └── package.json               # Backend dependencies
+│
+├── frontend/
+│   ├── app/
+│   │   ├── page.js                # Home page - list all jobs
+│   │   ├── layout.js              # Root layout
+│   │   ├── globals.css            # Global styles
+│   │   └── jobs/
+│   │       ├── [id]/
+│   │       │   └── page.js        # Job detail page
+│   │       └── new/
+│   │           └── page.js        # Create new job page
+│   ├── components/                # Reusable React components
+│   ├── lib/
+│   │   └── api.js                 # API client functions
+│   ├── next.config.js             # Next.js configuration
+│   ├── package.json               # Frontend dependencies
+│   └── .env.local.example         # Example environment file
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                 # CI/CD pipeline - testing & build
+│       └── cd.yml                 # CD pipeline - deployment
+│
+├── package.json                   # Root package.json with scripts
+├── README.md                       # This file
+└── .gitignore                     # Git ignore rules
+```
+
+---
+
+## Author
+
+**Tekshan Thaksara**
+
+---
+
+## Local Development URLs
 
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5050
+
+---
+
+## License
+
+This project is licensed under the **MIT License** - see the LICENSE file for details.
+
+You are free to:
+- ✅ Use this project for personal or commercial purposes
+- ✅ Modify and distribute the code
+- ✅ Include it in other projects
+
+The only requirement is to include the original license notice.
+
+---
+
+## Support
+
+If you have any questions or issues, feel free to open a GitHub issue or contact the author.
