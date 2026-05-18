@@ -19,8 +19,14 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm install
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
+
+      - name: Install backend dependencies
+        run: cd backend && npm install
 
       - name: Build frontend
         run: npm run build:frontend
@@ -33,5 +39,5 @@ jobs:
           cd backend
           timeout 5 npm start || true
         env:
-          MONGO_URI: mongodb://localhost:27017/service-board-test
+          MONGO_URI: mongodb+srv://legalceynode_db_user:RwEqNSu7MzodZaFn@service-board.0xfqhdh.mongodb.net/?appName=service-board
           PORT: 5050

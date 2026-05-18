@@ -18,11 +18,17 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm install
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
+
+      - name: Install backend dependencies
+        run: cd backend && npm install
 
       - name: Build
         run: npm run build
 
       - name: Deploy notification
-        run: echo "Deployment ready - Push to your hosting platform"
+        run: echo "✅ Build successful - Ready for deployment"
