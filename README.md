@@ -203,10 +203,17 @@ curl "http://localhost:5050/api/jobs?category=Electrical&status=In%20Progress"
 curl http://localhost:5050/api/jobs/YOUR_JOB_ID
 ```
 
-### Create a new job
+### Create a new job (requires JWT token)
 ```bash
+# First, get a JWT token:
+TOKEN=$(curl -X POST http://localhost:5050/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}' | jq -r '.token')
+
+# Then create the job:
 curl -X POST http://localhost:5050/api/jobs \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "title": "Leaky tap repair needed",
     "description": "Kitchen tap is dripping constantly",
@@ -217,16 +224,30 @@ curl -X POST http://localhost:5050/api/jobs \
   }'
 ```
 
-### Update job status
+### Update job status (requires JWT token)
 ```bash
+# First, get a JWT token:
+TOKEN=$(curl -X POST http://localhost:5050/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}' | jq -r '.token')
+
+# Then update the job:
 curl -X PATCH http://localhost:5050/api/jobs/YOUR_JOB_ID \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{"status": "In Progress"}'
 ```
 
-### Delete a job
+### Delete a job (requires JWT token)
 ```bash
-curl -X DELETE http://localhost:5050/api/jobs/YOUR_JOB_ID
+# First, get a JWT token:
+TOKEN=$(curl -X POST http://localhost:5050/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}' | jq -r '.token')
+
+# Then delete the job:
+curl -X DELETE http://localhost:5050/api/jobs/YOUR_JOB_ID \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ---
