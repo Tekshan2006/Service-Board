@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createJob } from "../../../lib/api";
+import { createJob, getToken } from "../../../lib/api";
+import LoginModal from "../../../components/LoginModal";
 
 // Available service categories
 const CATEGORIES = ["Plumbing", "Electrical", "Painting", "Joinery", "Other"];
@@ -11,6 +12,19 @@ const CATEGORIES = ["Plumbing", "Electrical", "Painting", "Joinery", "Other"];
 export default function NewJobPage() {
   // Get router for navigation after form submission
   const router = useRouter();
+
+  // Login modal state
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
+
+  // Check if user has token on mount
+  useEffect(() => {
+    const token = getToken();
+    setHasToken(!!token);
+    if (!token) {
+      setShowLoginModal(true);
+    }
+  }, []);
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -61,6 +75,13 @@ export default function NewJobPage() {
     e.preventDefault();
     setSubmitError("");
 
+    // Check if user is still logged in
+    const token = getToken();
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -80,6 +101,12 @@ export default function NewJobPage() {
 
   return (
     <div>
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={() => setHasToken(true)}
+      />
+      
       <Link href="/" className="back-link">← Back to jobs</Link>
       <h1 className="page-title">Post a New Job</h1>
 

@@ -1,4 +1,6 @@
 import "./globals.css";
+import "../styles/LoginModal.css";
+import Navbar from "./navbar";
 
 export const metadata = {
   title: "Service Request Board",
@@ -9,12 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <nav className="navbar">
-          <div className="nav-inner">
-            <a href="/" className="nav-brand">Service Board</a>
-            <a href="/jobs/new" className="btn btn-primary">+ Post a Job</a>
-          </div>
-        </nav>
+        <Navbar />
         <main className="container">{children}</main>
       </body>
     </html>

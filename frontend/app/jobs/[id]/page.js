@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { getJobById, updateJobStatus, deleteJob } from "../../../lib/api";
+import { getJobById, updateJobStatus, deleteJob, getToken } from "../../../lib/api";
+import LoginModal from "../../../components/LoginModal";
 
 // Available status options
 const STATUSES = ["Open", "In Progress", "Closed"];
@@ -29,6 +30,7 @@ export default function JobDetailPage() {
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [updateMsg, setUpdateMsg] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Load job details when component mounts
   useEffect(() => {
@@ -48,6 +50,12 @@ export default function JobDetailPage() {
 
   // Handle status update
   async function handleStatusChange() {
+    const token = getToken();
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (selectedStatus === job.status) {
       setUpdateMsg("Status is already set to that value.");
       return;
@@ -67,6 +75,12 @@ export default function JobDetailPage() {
   }
 
   async function handleDelete() {
+    const token = getToken();
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
     const confirmed = window.confirm("Are you sure you want to delete this job?");
     if (!confirmed) return;
 
@@ -90,6 +104,11 @@ export default function JobDetailPage() {
 
   return (
     <div>
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)}
+      />
+      
       <Link href="/" className="back-link">← Back to jobs</Link>
 
       <div className="card">
