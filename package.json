@@ -4,7 +4,7 @@
   "description": "Service Board - Full Stack Application",
   "private": true,
   "scripts": {
-    "install-all": "npm install",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ..",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",

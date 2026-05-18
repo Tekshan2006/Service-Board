@@ -19,22 +19,29 @@ A full-stack web app for posting and browsing home service requests.
 From root directory:
 
 ```bash
-npm install
+npm run install-all
 ```
+
+This installs dependencies for:
+- Root directory
+- Backend directory
+- Frontend directory
 
 ### Setup Environment Variables
 
 **Backend - create `backend/.env`:**
 ```
-MONGO_URI=mongodb://127.0.0.1:27017/service-board
+MONGO_URI=mongodb+srv://username:password@cluster.xxxxx.mongodb.net/?appName=service-board
 PORT=5050
 FRONTEND_URL=http://localhost:3000
 ```
 
-**Frontend - create `frontend/.env`:**
+**Frontend - create `frontend/.env.local`:**
 ```
 NEXT_PUBLIC_API_URL=http://localhost:5050
 ```
+
+> **Note:** For the MongoDB URI, use MongoDB Atlas (cloud database). Get your connection string from [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 
 ---
 
@@ -78,7 +85,7 @@ npm run seed
 
 | Command | Purpose |
 |---------|---------|
-| `npm install` | Install all dependencies for both frontend and backend |
+| `npm run install-all` | Install all dependencies for root, frontend, and backend |
 | `npm run dev:frontend` | Start frontend dev server (port 3000/3001) |
 | `npm run dev:backend` | Start backend dev server (port 5050) with hot-reload |
 | `npm run dev` | Start both frontend and backend |
